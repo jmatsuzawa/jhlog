@@ -1,0 +1,29 @@
+#!/bin/sh
+
+JHBUILD_LOG_DIR="${HOME}/var/log/jhbuild"
+
+MODULE=index
+
+while test $# -gt 0; do
+  case "$1" in
+    -[1-9])
+      prev=`echo $1 | sed -n 's/-\([0-9]\{1,\}\)/\1/p'`
+      ;;
+    -f|--failed)
+      ONLY_FAILED=true
+      ;;
+    *)
+      MODULE=$1
+      ;;
+  esac
+  shift
+done
+
+vol=`expr "${prev:-0}" + 1`
+latestlog=`ls -r ${JHBUILD_LOG_DIR} | sed -n "${vol}p"`
+
+if test x"$ONLY_FAILED" = x; then
+  w3m "${JHBUILD_LOG_DIR}/${latestlog}/${MODULE}.html"
+else
+  w3m "${JHBUILD_LOG_DIR}/${latestlog}/index.html" | grep failed | awk '{print $2}'
+fi
