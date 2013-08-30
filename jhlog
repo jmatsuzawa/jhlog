@@ -30,6 +30,10 @@ if test x"$ONLY_FAILED" = x; then
   w3m "$HTML"
 else
   HTML="${JHBUILD_LOG_DIR}/${latestlog}/index.html"
-  w3m "$HTML" | grep '^20[0-9][0-9]-[01][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]\.[0-9]\{3\} .*failed' | awk '{print $3}'
-  w3m "$HTML" | grep '^20[0-9][0-9]-[01][0-9]-[0-3][0-9]   *.*failed' | awk '{print $2}'
+  cat "$HTML" |
+    sed -n -e '
+      1,/The following modules failed to build/d
+      s!</\{0,1\}blockquote>!!
+      s/, */\n/gp' |
+    sed -e '/^$/d'
 fi
