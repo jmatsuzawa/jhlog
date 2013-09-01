@@ -29,7 +29,8 @@ if test x"$ONLY_FAILED" = x; then
   fi
   w3m "$HTML"
 else
-  cat "${JHBUILD_LOG_DIR}/${latestlog}/index.html" |
+  HTML="${JHBUILD_LOG_DIR}/${latestlog}/index.html"
+  cat "$HTML" |
     sed -n -e '
       1,/The following modules failed to build/d
       s!</\{0,1\}blockquote>!!
