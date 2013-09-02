@@ -1,0 +1,15 @@
+#compdef jhlog
+
+_jhlog() {
+  _arguments : \
+    '-f' \
+    '*: :_jhlog_modules'
+}
+
+(( $+functions[_jhlog_modules] )) ||  _jhlog_modules() {
+  local -a module_list
+  module_list=(${(@f)"$(jhlog -f ${words[2,$(($#words-1))]})"} )
+  _describe -t modules 'modules' module_list -V
+}
+
+_jhlog
